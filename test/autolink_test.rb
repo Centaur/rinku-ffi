@@ -5,7 +5,11 @@ $LOAD_PATH.unshift "#{rootdir}/lib"
 require 'test/unit'
 require 'cgi'
 require 'uri'
-require 'rinku'
+if RUBY_PLATFORM == 'java'
+  require 'rinku-ffi'
+else
+  require 'rinku'
+end
 
 class RedcarpetAutolinkTest < Test::Unit::TestCase
 
@@ -17,7 +21,7 @@ class RedcarpetAutolinkTest < Test::Unit::TestCase
 
   def test_escapes_quotes
     assert_linked %(<a href="http://website.com/&quot;onmouseover=document.body.style.backgroundColor=&quot;pink&quot;;//">http://website.com/"onmouseover=document.body.style.backgroundColor="pink";//</a>),
-      %(http://website.com/"onmouseover=document.body.style.backgroundColor="pink";//)
+                  %(http://website.com/"onmouseover=document.body.style.backgroundColor="pink";//)
   end
 
   def test_global_skip_tags
@@ -32,7 +36,7 @@ class RedcarpetAutolinkTest < Test::Unit::TestCase
     Rinku.skip_tags = nil
     assert_not_equal Rinku.auto_link(url), url
   end
-  
+
   def test_auto_link_with_single_trailing_punctuation_and_space
     url = "http://www.youtube.com"
     url_result = generate_result(url)
@@ -97,7 +101,7 @@ This is just a test. <a href="http://www.pokemon.com">http://www.pokemon.com</a>
     url = "http://api.rubyonrails.com/Foo.html"
     email = "fantabulous@shiznadel.ic"
 
-    assert_equal %(<p><a href="#{url}">#{url[0...7]}...</a><br /><a href="mailto:#{email}">#{email[0...7]}...</a><br /></p>), Rinku.auto_link("<p>#{url}<br />#{email}<br /></p>") { |_url| _url[0...7] + '...'}
+    assert_equal %(<p><a href="#{url}">#{url[0...7]}...</a><br /><a href="mailto:#{email}">#{email[0...7]}...</a><br /></p>), Rinku.auto_link("<p>#{url}<br />#{email}<br /></p>") { |_url| _url[0...7] + '...' }
   end
 
   def test_auto_link_with_block_with_html
@@ -138,7 +142,7 @@ This is just a test. <a href="http://www.pokemon.com">http://www.pokemon.com</a>
     url2 = "http://www.ruby-doc.org/core/Bar.html"
 
     assert_equal %(<p><a href="#{url1}">#{url1}</a><br /><a href="#{url2}">#{url2}</a><br /></p>), Rinku.auto_link("<p>#{url1}<br />#{url2}<br /></p>")
-  end  
+  end
 
   def test_block
     link = Rinku.auto_link("Find ur favorite pokeman @ http://www.pokemon.com") do |url|
@@ -215,30 +219,30 @@ This is just a test. <a href="http://www.pokemon.com">http://www.pokemon.com</a>
   end
 
   def test_links_like_autolink_rails
-    email_raw    = 'david@loudthinking.com'
+    email_raw = 'david@loudthinking.com'
     email_result = %{<a href="mailto:#{email_raw}">#{email_raw}</a>}
-    email2_raw    = '+david@loudthinking.com'
+    email2_raw = '+david@loudthinking.com'
     email2_result = %{<a href="mailto:#{email2_raw}">#{email2_raw}</a>}
-    link_raw     = 'http://www.rubyonrails.com'
-    link_result  = %{<a href="#{link_raw}">#{link_raw}</a>}
-    link_result_with_options  = %{<a href="#{link_raw}" target="_blank">#{link_raw}</a>}
-    link2_raw    = 'www.rubyonrails.com'
+    link_raw = 'http://www.rubyonrails.com'
+    link_result = %{<a href="#{link_raw}">#{link_raw}</a>}
+    link_result_with_options = %{<a href="#{link_raw}" target="_blank">#{link_raw}</a>}
+    link2_raw = 'www.rubyonrails.com'
     link2_result = %{<a href="http://#{link2_raw}">#{link2_raw}</a>}
-    link3_raw    = 'http://manuals.ruby-on-rails.com/read/chapter.need_a-period/103#page281'
+    link3_raw = 'http://manuals.ruby-on-rails.com/read/chapter.need_a-period/103#page281'
     link3_result = %{<a href="#{link3_raw}">#{link3_raw}</a>}
-    link4_raw    = CGI.escapeHTML 'http://foo.example.com/controller/action?parm=value&p2=v2#anchor123'
+    link4_raw = CGI.escapeHTML 'http://foo.example.com/controller/action?parm=value&p2=v2#anchor123'
     link4_result = %{<a href="#{link4_raw}">#{link4_raw}</a>}
-    link5_raw    = 'http://foo.example.com:3000/controller/action'
+    link5_raw = 'http://foo.example.com:3000/controller/action'
     link5_result = %{<a href="#{link5_raw}">#{link5_raw}</a>}
-    link6_raw    = 'http://foo.example.com:3000/controller/action+pack'
+    link6_raw = 'http://foo.example.com:3000/controller/action+pack'
     link6_result = %{<a href="#{link6_raw}">#{link6_raw}</a>}
-    link7_raw    = CGI.escapeHTML 'http://foo.example.com/controller/action?parm=value&p2=v2#anchor-123'
+    link7_raw = CGI.escapeHTML 'http://foo.example.com/controller/action?parm=value&p2=v2#anchor-123'
     link7_result = %{<a href="#{link7_raw}">#{link7_raw}</a>}
-    link8_raw    = 'http://foo.example.com:3000/controller/action.html'
+    link8_raw = 'http://foo.example.com:3000/controller/action.html'
     link8_result = %{<a href="#{link8_raw}">#{link8_raw}</a>}
-    link9_raw    = 'http://business.timesonline.co.uk/article/0,,9065-2473189,00.html'
+    link9_raw = 'http://business.timesonline.co.uk/article/0,,9065-2473189,00.html'
     link9_result = %{<a href="#{link9_raw}">#{link9_raw}</a>}
-    link10_raw    = 'http://www.mail-archive.com/ruby-talk@ruby-lang.org/'
+    link10_raw = 'http://www.mail-archive.com/ruby-talk@ruby-lang.org/'
     link10_result = %{<a href="#{link10_raw}">#{link10_raw}</a>}
 
     assert_linked %(Go to #{link_result} and say hello to #{email_result}), "Go to #{link_raw} and say hello to #{email_raw}"

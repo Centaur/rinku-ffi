@@ -1,16 +1,15 @@
 # encoding: UTF-8
 
 Gem::Specification.new do |s|
-  s.name = 'rinku'
-  s.version = '1.7.0'
-  s.summary = "Mostly autolinking"
+  s.name = 'rinku-ffi'
+  s.version = '1.0.0'
+  s.summary = "rinku for jruby"
   s.description = <<-EOF
-    A fast and very smart autolinking library that
-    acts as a drop-in replacement for Rails `auto_link`
+    add a FFI layer to original rinku
   EOF
-  s.email = 'vicent@github.com'
-  s.homepage = 'http://github.com/vmg/rinku'
-  s.authors = ["Vicent Marti"]
+  s.email = 'xiefei@gtan.com'
+  s.homepage = 'http://github.com/centaur/rinku-ffi'
+  s.authors = ["Vicent Marti", "Xie Fei"]
   # = MANIFEST =
   s.files = %w[
     COPYING
@@ -24,8 +23,9 @@ Gem::Specification.new do |s|
     ext/rinku/buffer.h
     ext/rinku/extconf.rb
     lib/rinku.rb
+    lib/rinku-ffi.rb
     lib/rails_rinku.rb
-    rinku.gemspec
+    rinku-ffi.gemspec
     test/autolink_test.rb
   ]
   # = MANIFEST =
@@ -33,4 +33,5 @@ Gem::Specification.new do |s|
   s.extra_rdoc_files = ["COPYING"]
   s.extensions = ["ext/rinku/extconf.rb"]
   s.require_paths = ["lib"]
+  s.add_dependency('ffi') if RUBY_PLATFORM == 'java'
 end

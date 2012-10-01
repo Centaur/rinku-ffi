@@ -25,7 +25,7 @@ task 'test' => [:compile]
 # PACKAGING =================================================================
 
 require 'rubygems'
-$spec = eval(File.read('rinku.gemspec'))
+$spec = eval(File.read('rinku-ffi.gemspec'))
 
 def package(ext='')
   "pkg/rinku-#{$spec.version}" + ext
@@ -40,12 +40,12 @@ task :install => package('.gem') do
 end
 
 desc 'Update the gemspec'
-task :update_gem => file('rinku.gemspec')
+task :update_gem => file('rinku-ffi.gemspec')
 
 directory 'pkg/'
 
-file package('.gem') => %w[pkg/ rinku.gemspec] + $spec.files do |f|
-  sh "gem build rinku.gemspec"
+file package('.gem') => %w[pkg/ rinku-ffi.gemspec] + $spec.files do |f|
+  sh "gem build rinku-ffi.gemspec"
   mv File.basename(f.name), f.name
 end
 

@@ -223,7 +223,6 @@ rinku_autolink(
 		while (isspace(*link_attr))
 			link_attr++;
 	}
-
 	bufgrow(ob, size);
 
 	i = end = 0;
@@ -244,7 +243,6 @@ rinku_autolink(
 		if (action == AUTOLINK_ACTION_SKIP_TAG) {
 			end += autolink__skip_tag(ob,
 				text + end, size - end, skip_tags);
-
 			continue;
 		}
 
@@ -295,6 +293,7 @@ autolink_callback(struct buf *link_text, const struct buf *link, void *block)
 	Check_Type(rb_link_text, T_STRING);
 	bufput(link_text, RSTRING_PTR(rb_link_text), RSTRING_LEN(rb_link_text));
 }
+
 
 const char **rinku_load_tags(VALUE rb_skip)
 {
@@ -459,10 +458,39 @@ rb_rinku_autolink(int argc, VALUE *argv, VALUE self)
 	return result;
 }
 
+
 void RUBY_EXPORT Init_rinku()
 {
 	rb_mRinku = rb_define_module("Rinku");
 	rb_define_method(rb_mRinku, "auto_link", rb_rinku_autolink, -1);
 	rb_define_const(rb_mRinku, "AUTOLINK_SHORT_DOMAINS", INT2FIX(SD_AUTOLINK_SHORT_DOMAINS));
+}
+
+int RUBY_EXPORT ffi_autolink(
+	struct buf* output_buf,
+	const char *text,
+	autolink_mode mode,
+	unsigned int flags,
+	const char *link_attr,
+	const char **skip_tags,
+	void (*link_text_cb)(struct buf *ob, const struct buf *link, void *payload),
+	void *payload){
+    return rinku_autolink(output_buf, text, strlen(text), mode, flags, link_attr, skip_tags, link_text_cb, payload);
+}
+
+struct buf* RUBY_EXPORT ffi_create_buf() {
+	struct buf *output_buf;
+    output_buf = bufnew(32);
+    return output_buf;
+}
+
+void RUBY_EXPORT ffi_release_buf(struct buf* output_buf) {
+    bufrelease(output_buf);
+}
+
+
+void RUBY_EXPORT ffi_bufput(struct buf *link_text, char* rb_link_text)
+{
+  bufput(link_text, rb_link_text, strlen(rb_link_text));
 }
 

@@ -1,4 +1,8 @@
-require 'rinku'
+if RUBY_PLATFORM == 'java'
+  require 'rinku-ffi'
+else
+  require 'rinku'
+end
 
 module RailsRinku
   def rinku_auto_link(text, *args, &block)
