@@ -29,9 +29,13 @@ Try it in irb,
     jruby-1.7.0.RC1 :002 > Rinku.auto_link("hello http://world.com")
      => "hello <a href=\"http://world.com\">http://world.com</a>"
 
+Use in Rails, the same way as the original rinku.
+
+	
+    require 'rails-rinku'
 
 
-license
+License
 -------
 
 See original rinku license.
