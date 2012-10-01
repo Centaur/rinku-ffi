@@ -3,11 +3,12 @@ Rinku for JRuby
 
 For now , the bundle built by jruby cannot be loaded correctly by ffi-lib,
 you have to manually build it with mri ruby.
+
 Install,
 
     $ gem install rinku-ffi
 
-After installation,
+Build native extension manually,
 
     $ cd ~/.rvm/gems/jruby-1.7.0.RC1/gems/rinku-ffi-1.0.0/ext/rinku
     $ make realclean
