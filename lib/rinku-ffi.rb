@@ -1,7 +1,7 @@
 require 'ffi'
 
 module Rinku
-  VERSION = "1.7.0"
+  VERSION = "1.7.2"
   AUTOLINK_SHORT_DOMAINS=1
   extend FFI::Library
 
