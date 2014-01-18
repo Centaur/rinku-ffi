@@ -1,7 +1,7 @@
 Rinku for JRuby
 ==================
 
-Latest version 1.0.1, reflect rinku-1.7.2, tested on jruby-1.7.0.
+Latest version 1.0.1, reflect rinku-1.7.2, tested on jruby-1.7.x.
 
 For now , the bundle built by jruby cannot be loaded correctly by ffi-lib,
 you have to manually build it with mri ruby.
@@ -19,10 +19,15 @@ Build native extension manually,
     $ make
     $ rvm use jruby
 
+Mark this gem as installed,
+
+    $ cp ~/.rvm/gems/jruby-1.7.0/gems/rinku-ffi-1.0.1/rinku-ffi.gemspec ~/.rvm/gems/jruby-1.7.0/specifications/
+
 Run tests,
 
     $ cd ~/.rvm/gems/jruby-1.7.0.RC1/gems/rinku-ffi-1.0.1
     $ ruby test/autolink_test.rb
+
 
 Try it in irb,
 
